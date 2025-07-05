@@ -1,6 +1,7 @@
 //! A super simple peak meter widget.
 
 use crossbeam::atomic::AtomicCell;
+use iced_baseview::alignment::Vertical;
 use std::marker::PhantomData;
 use std::time::Duration;
 use std::time::Instant;
@@ -276,8 +277,8 @@ where
                     font,
                     size: text_size,
                     bounds: ticks_bounds.size(),
-                    horizontal_alignment: alignment::Horizontal::Center,
-                    vertical_alignment: alignment::Vertical::Top,
+                    align_x: text::Alignment::Center,
+                    align_y: Vertical::Top,
                     line_height: Default::default(),
                     shaping: Default::default(),
                     wrapping: text::Wrapping::None,
@@ -299,8 +300,8 @@ where
             font,
             size: text_size,
             bounds: ticks_bounds.size(),
-            horizontal_alignment: alignment::Horizontal::Center,
-            vertical_alignment: alignment::Vertical::Top,
+            align_x: text::Alignment::Center,
+            align_y: Vertical::Top,
             line_height: Default::default(),
             shaping: Default::default(),
             wrapping: text::Wrapping::None,
@@ -315,8 +316,8 @@ where
                 font,
                 size: text_size,
                 bounds: ticks_bounds.size(),
-                horizontal_alignment: alignment::Horizontal::Left,
-                vertical_alignment: alignment::Vertical::Top,
+                align_x: text::Alignment::Left,
+                align_y: Vertical::Top,
                 line_height: Default::default(),
                 shaping: Default::default(),
                 wrapping: text::Wrapping::None,

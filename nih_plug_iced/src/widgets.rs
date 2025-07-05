@@ -12,7 +12,7 @@ pub mod param_slider;
 pub mod peak_meter;
 pub mod util;
 
-pub use param_slider::ParamSlider;
+pub use param_slider::{ParamSlider, SliderStyle, RotaryStyle};
 pub use peak_meter::PeakMeter;
 
 /// A message to update a parameter value. Since NIH-plug manages the parameters, interacting with

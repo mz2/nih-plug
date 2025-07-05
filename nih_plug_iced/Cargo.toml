@@ -22,9 +22,6 @@ default = []
 # compatibility at the cost of some iced features not being available.
 # opengl = ["iced_baseview/glow"]
 
-# Enables a debug view in native platforms (press F12)
-debug = ["iced_baseview/debug"]
-
 wgpu = ["iced_baseview/wgpu"]
 # Enables the `Image` widget, only supported by the wgpu backend
 image = ["iced_baseview/image"]
@@ -42,10 +39,10 @@ nih_plug_assets = { git = "https://github.com/robbert-vdh/nih_plug_assets.git" }
 raw-window-handle = "0.5"
 
 atomic_refcell = "0.1"
-baseview = { git = "https://github.com/RustAudio/baseview.git", rev = "579130ecb4f9f315ae52190af42f0ea46aeaa4a2" }
+baseview = { path = "../../baseview" }
 crossbeam = "0.8"
 # This targets iced 0.13
-iced_baseview = { git = "https://github.com/BillyDM/iced_baseview.git", rev = "a0842a8205c852127981e27de6342cf2e665562f", default_features = false }
+iced_baseview = { path = "../../iced_baseview/", version = "0.1.0"}
 futures-util = "0.3"
 
 # To make the state persistable

@@ -10,6 +10,7 @@ use crate::widget::{self, row, scrollable, Column, Scrollable, Space};
 use std::marker::PhantomData;
 use std::sync::Arc;
 
+use iced_baseview::Pixels;
 use nih_plug::prelude::{Param, ParamFlags, ParamPtr, Params};
 
 use super::{ParamMessage, ParamSlider};
@@ -179,7 +180,7 @@ where
         .padding(padding)
         .width(self.width)
         .height(self.height)
-        .max_width(self.max_width);
+        .max_width(Pixels::from(self.max_width as u32));
 
         scrollable(content).spacing(spacing)
     }
@@ -254,18 +255,18 @@ where
         });
     }
 
-    fn on_event(
+    fn update(
         &mut self,
         tree: &mut iced_baseview::core::widget::Tree,
-        event: event::Event,
+        event: &event::Event,
         layout: Layout<'_>,
         cursor: iced_baseview::core::mouse::Cursor,
         renderer: &Renderer,
         clipboard: &mut dyn Clipboard,
         shell: &mut Shell<'_, ParamMessage>,
         viewport: &Rectangle,
-    ) -> event::Status {
-        self.content(Some(renderer)).on_event(
+    ) {
+        self.content(Some(renderer)).update(
             &mut tree.children[0],
             event,
             layout.children().next().unwrap(),
@@ -274,7 +275,7 @@ where
             clipboard,
             shell,
             viewport,
-        )
+        );
     }
 
     fn mouse_interaction(

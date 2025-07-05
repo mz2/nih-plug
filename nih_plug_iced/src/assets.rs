@@ -4,17 +4,29 @@ use std::borrow::Cow;
 
 use crate::core::Font;
 
+use iced_baseview::font::Family::*;
+use iced_baseview::font::*;
 // This module provides a re-export and simple font wrappers around the re-exported fonts.
 pub use nih_plug_assets::*;
 
-pub const NOTO_SANS_REGULAR: Font = Font::with_name("Noto Sans Regular");
-pub const NOTO_SANS_REGULAR_ITALIC: Font = Font::with_name("Noto Sans Regular Italic");
+pub const NOTO_SANS_REGULAR: Font = Font::with_name("Noto Sans");
+pub const NOTO_SANS_REGULAR_ITALIC: Font = Font::with_name("Noto Sans");
 pub const NOTO_SANS_THIN: Font = Font::with_name("Noto Sans Thin");
 pub const NOTO_SANS_THIN_ITALIC: Font = Font::with_name("Noto Sans Thin Italic");
 pub const NOTO_SANS_LIGHT: Font = Font::with_name("Noto Sans Light");
 pub const NOTO_SANS_LIGHT_ITALIC: Font = Font::with_name("Noto Sans Light Italic");
-pub const NOTO_SANS_BOLD: Font = Font::with_name("Noto Sans Bold");
+pub const NOTO_SANS_BOLD: Font = Font {
+    family: Name("Noto Sans"),
+    weight: Weight::Bold,
+    stretch: Stretch::Normal,
+    style: Style::Normal,
+};
 pub const NOTO_SANS_BOLD_ITALIC: Font = Font::with_name("Noto Sans Bold Italic");
+
+pub const NOTO_SANS_MONO_REGULAR: Font = Font::with_name("Noto Sans Mono");
+pub const NOTO_SANS_MONO_BOLD: Font = Font::with_name("Noto Sans Mono Bold");
+
+pub const COURIER_NEW: Font = Font::with_name("Courier New");
 
 /// Useful for initializing the Settings, like this:
 /// ```rust,ignore

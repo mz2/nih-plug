@@ -1,7 +1,7 @@
 use atomic_float::AtomicF32;
 use nih_plug::prelude::{util, Editor, GuiContext};
 use nih_plug_iced::assets::noto_sans_fonts_data;
-use nih_plug_iced::widget::{column, text, Space};
+use nih_plug_iced::widget::{column, row, text, Space};
 use nih_plug_iced::widgets as nih_widgets;
 use nih_plug_iced::*;
 use std::sync::Arc;
@@ -11,7 +11,7 @@ use crate::GainParams;
 
 // Makes sense to also define this here, makes it a bit easier to keep track of
 pub(crate) fn default_state() -> Arc<IcedState> {
-    IcedState::from_size(200, 150)
+    IcedState::from_size(600, 300)
 }
 
 pub(crate) fn create(
@@ -72,26 +72,102 @@ impl IcedEditor for GainEditor {
     }
 
     fn view(&self) -> Element<'_, Self::Message> {
-        let title = text("Gain GUI")
+        let title = text("Gain GUI - Slider Styles Demo")
             .font(assets::NOTO_SANS_LIGHT)
-            .size(40)
-            .height(50)
+            .size(30)
+            .height(40)
             .width(Length::Fill)
             .align_x(alignment::Horizontal::Center)
             .align_y(alignment::Vertical::Bottom);
 
-        let text = text("Gain").height(20).width(Length::Fill).center();
+        let sliders = row![
+            column![
+                text("Horizontal").size(14),
+                nih_widgets::ParamSlider::new(&self.params.gain)
+                    .width(Length::Fixed(150.0))
+                    .map(Message::ParamUpdate),
+            ]
+            .align_x(alignment::Horizontal::Center)
+            .spacing(5),
+            column![
+                text("Vertical").size(14),
+                nih_widgets::ParamSlider::new(&self.params.gain)
+                    .vertical()
+                    .width(Length::Fixed(30.0))
+                    .height(Length::Fixed(100.0))
+                    .map(Message::ParamUpdate),
+            ]
+            .align_x(alignment::Horizontal::Center)
+            .spacing(5),
+            column![
+                text("Rotary Unipolar").size(14),
+                nih_widgets::ParamSlider::new(&self.params.gain)
+                    .rotary(nih_widgets::RotaryStyle::Unipolar)
+                    .rotary_indicator_size(5.0)
+                    .rotary_text_below(true)
+                    .width(Length::Fixed(60.0))
+                    .height(Length::Fixed(80.0))
+                    .map(Message::ParamUpdate),
+            ]
+            .align_x(alignment::Horizontal::Center)
+            .spacing(5),
+            column![
+                text("Rotary Bipolar").size(14),
+                nih_widgets::ParamSlider::new(&self.params.gain)
+                    .rotary(nih_widgets::RotaryStyle::Bipolar)
+                    .rotary_indicator_size(2.0)
+                    .width(Length::Fixed(60.0))
+                    .height(Length::Fixed(60.0))
+                    .map(Message::ParamUpdate),
+            ]
+            .align_x(alignment::Horizontal::Center)
+            .spacing(5),
+            column![
+                text("Rotary Width").size(14),
+                nih_widgets::ParamSlider::new(&self.params.gain)
+                    .rotary(nih_widgets::RotaryStyle::Width)
+                    .rotary_indicator_size(1.8)
+                    .width(Length::Fixed(60.0))
+                    .height(Length::Fixed(60.0))
+                    .map(Message::ParamUpdate),
+            ]
+            .align_x(alignment::Horizontal::Center)
+            .spacing(5),
+            column![
+                text("Bipolar Full Circle").size(14),
+                nih_widgets::ParamSlider::new(&self.params.gain)
+                    .rotary(nih_widgets::RotaryStyle::BipolarFullCircle { start_from_top: false })
+                    .rotary_indicator_size(3.0)
+                    .rotary_text_below(true)
+                    .width(Length::Fixed(60.0))
+                    .height(Length::Fixed(80.0))
+                    .map(Message::ParamUpdate),
+            ]
+            .align_x(alignment::Horizontal::Center)
+            .spacing(5),
+        ]
+        .spacing(20)
+        .align_y(alignment::Vertical::Center);
+
+        let info_text = text("All sliders control the same gain parameter. Drag to change value, Shift+drag for fine control.")
+            .size(12)
+            .width(Length::Fill)
+            .center();
 
         column![
             title,
-            text,
-            nih_widgets::ParamSlider::new(&self.params.gain).map(Message::ParamUpdate),
+            Space::with_height(10),
+            sliders,
+            Space::with_height(10),
+            info_text,
             Space::with_height(10),
             nih_widgets::PeakMeter::new(util::gain_to_db(
                 self.peak_meter.load(std::sync::atomic::Ordering::Relaxed),
             ))
             .hold_time(Duration::from_millis(600))
         ]
+        .padding(10)
+        .spacing(10)
         .align_x(alignment::Horizontal::Center)
         .into()
     }

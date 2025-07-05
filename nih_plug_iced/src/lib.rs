@@ -72,8 +72,8 @@
 //!                 Text::new("Foo")
 //!                     .height(20.into())
 //!                     .width(Length::Fill)
-//!                     .horizontal_alignment(alignment::Horizontal::Center)
-//!                     .vertical_alignment(alignment::Vertical::Center),
+//!                     .align_x(alignment::Horizontal::Center)
+//!                     .align_y(alignment::Vertical::Center),
 //!             )
 //!             .push(
 //!                 nih_widgets::ParamSlider::new(

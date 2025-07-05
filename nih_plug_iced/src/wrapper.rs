@@ -9,8 +9,21 @@ use iced_baseview::{
 };
 use nih_plug::prelude::GuiContext;
 use std::sync::Arc;
+use std::hash::{Hash, Hasher};
 
 use crate::{IcedEditor, ParameterUpdate};
+
+#[derive(Clone)]
+struct HashableReceiver {
+    receiver: Arc<channel::Receiver<ParameterUpdate>>,
+    id: u64,
+}
+
+impl Hash for HashableReceiver {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.id.hash(state);
+    }
+}
 
 /// Wraps an `iced_baseview` [`Application`] around [`IcedEditor`]. Needed to allow editors to
 /// always receive a copy of the GUI context.
@@ -113,44 +126,40 @@ impl<E: IcedEditor> iced_baseview::Application for IcedEditorWrapperApplication<
             })),
         };
 
+        let hashable_receiver = HashableReceiver {
+            receiver: self.parameter_updates_receiver.clone(),
+            id: 0,
+        };
         let subscription = Subscription::batch([
             // For some reason there's no adapter to just convert `futures::channel::mpsc::Receiver`
             // into a stream that doesn't require consuming that receiver (which wouldn't work in
             // this case since the subscriptions function gets called repeatedly). So we'll just use
             // a crossbeam queue and this unfold instead.
-            Subscription::run_with_id(
-                "parameter updates",
-                futures_util::stream::unfold(
-                    self.parameter_updates_receiver.clone(),
-                    |parameter_updates_receiver| match parameter_updates_receiver.try_recv() {
-                        Ok(_) => futures_util::future::ready(Some((
-                            Message::ParameterUpdate,
-                            parameter_updates_receiver,
-                        )))
-                        .boxed(),
-                        Err(channel::TryRecvError::Empty) => {
-                            futures_util::future::pending().boxed()
-                        }
-                        Err(channel::TryRecvError::Disconnected) => {
-                            futures_util::future::ready(None).boxed()
-                        }
-                    },
-                ),
-            ),
+            Subscription::run_with(hashable_receiver, |h| {
+                futures_util::stream::unfold(h.receiver.clone(), |parameter_updates_receiver| match parameter_updates_receiver.try_recv() {
+                    Ok(_) => {
+                        futures_util::future::ready(Some((Message::ParameterUpdate, parameter_updates_receiver))).boxed()
+                    }
+                    Err(channel::TryRecvError::Empty) => futures_util::future::pending().boxed(),
+                    Err(channel::TryRecvError::Disconnected) => {
+                        futures_util::future::ready(None).boxed()
+                    }
+                })
+            }),
             self.editor
                 .subscription(&mut editor_window_subs)
                 .map(|m| Message::EditorMessage(m)),
         ]);
 
-        if let Some(message) = editor_window_subs.on_frame.as_ref() {
-            let message = Arc::clone(message);
-            window_subs.on_frame = Some(Arc::new(move || message().map(Message::EditorMessage)));
-        }
-        if let Some(message) = editor_window_subs.on_window_will_close.as_ref() {
-            let message = Arc::clone(message);
-            window_subs.on_window_will_close =
-                Some(Arc::new(move || message().map(Message::EditorMessage)));
-        }
+        // if let Some(message) = editor_window_subs.on_frame.as_ref() {
+        //     let message = Arc::clone(message);
+        //     window_subs.on_frame = Some(Arc::new(move || message().map(Message::EditorMessage)));
+        // }
+        // if let Some(message) = editor_window_subs.on_window_will_close.as_ref() {
+        //     let message = Arc::clone(message);
+        //     window_subs.on_window_will_close =
+        //         Some(Arc::new(move || message().map(Message::EditorMessage)));
+        // }
 
         subscription
     }
