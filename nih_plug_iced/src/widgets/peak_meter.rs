@@ -116,7 +116,7 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         _tree: &mut Tree,
         _renderer: &Renderer,
         limits: &layout::Limits,
@@ -282,6 +282,7 @@ where
                     line_height: Default::default(),
                     shaping: Default::default(),
                     wrapping: text::Wrapping::None,
+                    hint_factor: None,
                 },
                 Point {
                     x: x_coordinate,
@@ -305,6 +306,7 @@ where
             line_height: Default::default(),
             shaping: Default::default(),
             wrapping: text::Wrapping::None,
+            hint_factor: None,
         })
         .min_width();
 
@@ -321,6 +323,7 @@ where
                 line_height: Default::default(),
                 shaping: Default::default(),
                 wrapping: text::Wrapping::None,
+                hint_factor: None,
             },
             Point {
                 x: zero_db_x_coordinate + (zero_db_text_width / 2.0) + (text_size.0 * 0.2),

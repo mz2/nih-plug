@@ -8,8 +8,9 @@ use crate::core::{
     event, keyboard, layout, mouse, renderer, text, touch, Border, Clipboard, Color, Element,
     Event, Font, Layout, Length, Pixels, Point, Rectangle, Shell, Size, Vector, Widget,
 };
+use crate::core::widget::Id;
 use crate::widget::text_input;
-use crate::widget::text_input::{Id, TextInput};
+use crate::widget::text_input::TextInput;
 
 use super::{util, ParamMessage};
 
@@ -415,6 +416,7 @@ impl<'a, P: Param> ParamSlider<'a, P> {
             align_y: Vertical::Center,
             shaping: Default::default(),
             wrapping: Default::default(),
+            hint_factor: None,
         })
         .min_width();
 
@@ -500,7 +502,7 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         _tree: &mut Tree,
         _renderer: &Renderer,
         limits: &layout::Limits,
@@ -947,6 +949,7 @@ where
                                     line_height: text::LineHeight::Relative(1.0),
                                     shaping: Default::default(),
                                     wrapping: Default::default(),
+                                    hint_factor: None,
                                 },
                                 symbol_bounds.position(),
                                 fill_color,
@@ -985,6 +988,7 @@ where
                             line_height: text::LineHeight::Relative(1.0),
                             shaping: Default::default(),
                             wrapping: Default::default(),
+                            hint_factor: None,
                         },
                         text_bounds.position(),
                         style.text_color,
@@ -1010,6 +1014,7 @@ where
                             line_height: text::LineHeight::Relative(1.0),
                             shaping: Default::default(),
                             wrapping: Default::default(),
+                            hint_factor: None,
                         },
                         text_bounds.position(),
                         style.text_color,
@@ -1054,6 +1059,7 @@ where
                                 line_height: text::LineHeight::Relative(1.0),
                                 shaping: Default::default(),
                                 wrapping: Default::default(),
+                                hint_factor: None,
                             },
                             text_bounds.position(),
                             filled_text_color,
@@ -1072,7 +1078,6 @@ where
         layout: Layout<'_>,
         cursor: mouse::Cursor,
         renderer: &Renderer,
-        clipboard: &mut dyn Clipboard,
         shell: &mut Shell<'_, ParamMessage>,
         viewport: &Rectangle,
     ) {
@@ -1101,7 +1106,6 @@ where
                         layout,
                         cursor,
                         renderer,
-                        clipboard,
                         &mut text_input_shell,
                         viewport,
                     )

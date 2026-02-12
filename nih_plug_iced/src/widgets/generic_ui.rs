@@ -168,7 +168,7 @@ where
                     .spacing(spacing * 2.0);
 
                     if self.pad_scrollbar {
-                        row.push(Space::with_width(0))
+                        row.push(Space::new().width(0))
                     } else {
                         row
                     }
@@ -208,7 +208,7 @@ where
     }
 
     fn layout(
-        &self,
+        &mut self,
         tree: &mut Tree,
         renderer: &Renderer,
         limits: &layout::Limits,
@@ -239,20 +239,19 @@ where
     }
 
     fn operate(
-        &self,
+        &mut self,
         tree: &mut Tree,
         layout: Layout<'_>,
         renderer: &Renderer,
         operation: &mut dyn Operation,
     ) {
-        operation.container(self.id.as_ref(), layout.bounds(), &mut |operation| {
-            self.content(Some(renderer)).operate(
-                tree,
-                layout.children().next().unwrap(),
-                renderer,
-                operation,
-            )
-        });
+        operation.container(self.id.as_ref(), layout.bounds());
+        self.content(Some(renderer)).operate(
+            tree,
+            layout.children().next().unwrap(),
+            renderer,
+            operation,
+        );
     }
 
     fn update(
@@ -262,7 +261,6 @@ where
         layout: Layout<'_>,
         cursor: iced_baseview::core::mouse::Cursor,
         renderer: &Renderer,
-        clipboard: &mut dyn Clipboard,
         shell: &mut Shell<'_, ParamMessage>,
         viewport: &Rectangle,
     ) {
@@ -272,7 +270,6 @@ where
             layout.children().next().unwrap(),
             cursor,
             renderer,
-            clipboard,
             shell,
             viewport,
         );
