@@ -151,15 +151,15 @@ impl<E: IcedEditor> iced_baseview::Application for IcedEditorWrapperApplication<
                 .map(|m| Message::EditorMessage(m)),
         ]);
 
-        // if let Some(message) = editor_window_subs.on_frame.as_ref() {
-        //     let message = Arc::clone(message);
-        //     window_subs.on_frame = Some(Arc::new(move || message().map(Message::EditorMessage)));
-        // }
-        // if let Some(message) = editor_window_subs.on_window_will_close.as_ref() {
-        //     let message = Arc::clone(message);
-        //     window_subs.on_window_will_close =
-        //         Some(Arc::new(move || message().map(Message::EditorMessage)));
-        // }
+        if let Some(message) = editor_window_subs.on_frame.as_ref() {
+            let message = Arc::clone(message);
+            window_subs.on_frame = Some(Arc::new(move || message().map(Message::EditorMessage)));
+        }
+        if let Some(message) = editor_window_subs.on_window_will_close.as_ref() {
+            let message = Arc::clone(message);
+            window_subs.on_window_will_close =
+                Some(Arc::new(move || message().map(Message::EditorMessage)));
+        }
 
         subscription
     }
