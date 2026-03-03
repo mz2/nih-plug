@@ -282,6 +282,7 @@ where
                     line_height: Default::default(),
                     shaping: Default::default(),
                     wrapping: text::Wrapping::None,
+                    ellipsis: Default::default(),
                     hint_factor: None,
                 },
                 Point {
@@ -306,6 +307,7 @@ where
             line_height: Default::default(),
             shaping: Default::default(),
             wrapping: text::Wrapping::None,
+            ellipsis: Default::default(),
             hint_factor: None,
         })
         .min_width();
@@ -323,6 +325,7 @@ where
                 line_height: Default::default(),
                 shaping: Default::default(),
                 wrapping: text::Wrapping::None,
+                ellipsis: Default::default(),
                 hint_factor: None,
             },
             Point {
