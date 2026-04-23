@@ -29,6 +29,11 @@ image = ["iced_baseview/image"]
 svg = ["iced_baseview/svg"]
 # Enables the `Canvas` widget for the wgpu backend
 canvas = ["iced_baseview/canvas"]
+# Enables the `Geometry` primitives (used by canvas internals and custom mesh rendering)
+geometry = ["iced_baseview/geometry"]
+# Use web-colors (CSS-style sRGB-linear blending) for consistent color rendering
+# with the standalone apps
+web-colors = ["iced_baseview/web-colors"]
 
 [dependencies]
 nih_plug = { path = "..", default_features = false }
